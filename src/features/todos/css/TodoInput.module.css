@@ -1,0 +1,26 @@
+/* src/features/todos/TodoInput.module.css */
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.inputField {
+  padding: 10px;
+  font-size: 16px;
+  margin-right: 10px;
+  flex-grow: 1;
+}
+
+.addButton {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.addButton:hover {
+  background-color: #0056b3;
+}

@@ -1,7 +1,8 @@
 // src/features/todos/TodoItem.tsx
-import React from "react";
-import { useDispatch } from "react-redux";
-import { toggleTodo, deleteTodo } from "./todoSlice";
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { toggleTodo, deleteTodo, editTodo } from './todoSlice';
+import styles from './css/TodoItem.module.css';
 
 interface TodoItemProps {
   todo: {
@@ -12,6 +13,8 @@ interface TodoItemProps {
 }
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newText, setNewText] = useState(todo.text);
   const dispatch = useDispatch();
 
   const handleToggle = () => {
@@ -22,15 +25,42 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
     dispatch(deleteTodo(todo.id));
   };
 
+  const handleEdit = () => {
+    if (isEditing && newText.trim().length > 0) {
+      dispatch(editTodo({
+        id: todo.id,
+        text: newText
+      }));
+    }
+    setIsEditing(!isEditing);
+  };
+
   return (
-    <div>
-      <input type="checkbox" checked={todo.completed} onChange={handleToggle} />
-      <span
-        style={{ textDecoration: todo.completed ? "line-through" : "none" }}
-      >
-        {todo.text}
-      </span>
-      <button onClick={handleDelete}>Delete</button>
+    <div className={styles.todoItem}>
+      <input 
+        type="checkbox" 
+        checked={todo.completed} 
+        onChange={handleToggle} 
+        className={styles.todoCheckbox}
+      />
+      {isEditing ? (
+        <input 
+          type="text" 
+          value={newText} 
+          onChange={(e) => setNewText(e.target.value)} 
+          className={styles.todoEditInput}
+        />
+      ) : (
+        <span 
+          onClick={handleToggle}
+          className={`${styles.todoText} ${todo.completed ? styles.completed : ''}`}>
+          {todo.text}
+        </span>
+      )}
+      <button onClick={handleEdit} className={styles.editButton}>
+        {isEditing ? 'Save' : 'Edit'}
+      </button>
+      <button onClick={handleDelete} className={styles.deleteButton}>Delete</button>
     </div>
   );
 };
